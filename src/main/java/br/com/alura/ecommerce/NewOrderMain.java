@@ -14,7 +14,7 @@ public class NewOrderMain {
         KafkaProducer<String, String> producer = new KafkaProducer<>(properties());
 
         String value = "12121,23232,34343434";
-        ProducerRecord<String, String> record = new ProducerRecord<>("ECOMMERCE_NEW_ORDER", value, value);
+        var record = new ProducerRecord<>("JONAS", value, value);
 
         // Producer permite passar uma função de callback para conseguir criar validações de notificação
         producer.send(record, (data, ex) -> {
@@ -31,7 +31,7 @@ public class NewOrderMain {
         Properties properties = new Properties();
 
         // Indica qual o caminho que o kafka está respondendo
-        properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
+        properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 
         // Diz qual é o tipo de serializer que será reponsavel por transformar a string para bytes tanto do key como do value
         properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
