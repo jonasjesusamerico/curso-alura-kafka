@@ -14,7 +14,7 @@ public class NewOrderMain {
         KafkaProducer<String, String> producer = new KafkaProducer<>(properties());
 
         String value = "12121,23232,34343434";
-        var record = new ProducerRecord<>("JONAS", value, value);
+        var record = new ProducerRecord<>("ECOMMERCE_NEW_ORDER", value, value);
 
         // Producer permite passar uma função de callback para conseguir criar validações de notificação
         producer.send(record, (data, ex) -> {

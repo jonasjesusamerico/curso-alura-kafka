@@ -14,7 +14,7 @@ public class FraudDetectorService {
 
     public static void main(String[] args) {
         var consumer = new KafkaConsumer<>(properties());
-        consumer.subscribe(Collections.singletonList("JONAS"));
+        consumer.subscribe(Collections.singletonList("ECOMMERCE_NEW_ORDER"));
 
         while (true) {
             var poll = consumer.poll(Duration.ofMillis(100));
