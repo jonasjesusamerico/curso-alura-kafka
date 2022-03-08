@@ -39,7 +39,12 @@ class KafkaService<T> implements Closeable {
             if (!poll.isEmpty()) {
                 System.out.println("Encontrei " + poll.count() + " registros");
                 for (var record : poll) {
-                    parse.consume(record);
+                    try {
+                        parse.consume(record);
+                    } catch (Exception e) {
+                        // so far, just logging the exception for this message
+                        e.printStackTrace();
+                    }
                 }
             }
 
