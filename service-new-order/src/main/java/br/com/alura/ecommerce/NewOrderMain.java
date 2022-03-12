@@ -8,9 +8,9 @@ public class NewOrderMain {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         try (var orderDispatcher = new KafkaDispatcher<Order>()) {
-            var email = Math.random() + "@email.com";
             try (var emailDispatcher = new KafkaDispatcher<String>()) {
 
+                var email = Math.random() + "@email.com";
                 for (int i = 0; i < 10; i++) {
                     var orderId = UUID.randomUUID().toString();
                     var amount = BigDecimal.valueOf(Math.random() * 5000 + 1);
