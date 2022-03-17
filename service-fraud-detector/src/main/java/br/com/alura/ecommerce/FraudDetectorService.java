@@ -24,7 +24,7 @@ public class FraudDetectorService {
 
     private final KafkaDispatcher<Order> orderDispatcher = new KafkaDispatcher<Order>();
 
-    private void parse(ConsumerRecord<String, Order> record) throws ExecutionException, InterruptedException {
+    private void parse(ConsumerRecord<String, Message<Order>> record) throws ExecutionException, InterruptedException {
         System.out.println("---------------------------------------");
         System.out.println("Processing new order, cheking for fraud");
         System.out.println(record.key());
@@ -38,7 +38,7 @@ public class FraudDetectorService {
             e.printStackTrace();
         }
 
-        var order = record.value();
+        var order = record.value().getPayLoad();
 
         if (isFraud(order)) {
             // Pretending that the happens when the amount is >= 4500
