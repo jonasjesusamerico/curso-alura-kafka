@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutionException;
 
 public class FraudDetectorService {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
         var fraudDetectorService = new FraudDetectorService();
         try (var service = new KafkaService<>(
                 FraudDetectorService.class.getSimpleName(),
@@ -22,7 +22,7 @@ public class FraudDetectorService {
         }
     }
 
-    private final KafkaDispatcher<Order> orderDispatcher = new KafkaDispatcher<Order>(FraudDetectorService.class.getSimpleName());
+    private final KafkaDispatcher<Order> orderDispatcher = new KafkaDispatcher<Order>();
 
     private void parse(ConsumerRecord<String, Message<Order>> record) throws ExecutionException, InterruptedException {
         System.out.println("---------------------------------------");

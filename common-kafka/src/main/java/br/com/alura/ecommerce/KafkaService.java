@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 
 class KafkaService<T> implements Closeable {
@@ -33,19 +34,30 @@ class KafkaService<T> implements Closeable {
 
     }
 
-    void run() {
-        while (true) {
-            var poll = consumer.poll(Duration.ofMillis(100));
-            if (!poll.isEmpty()) {
-                System.out.println("Encontrei " + poll.count() + " registros");
-                for (var record : poll) {
-                    try {
-                        parse.consume(record);
-                    } catch (Exception e) {
-                        // so far, just logging the exception for this message
-                        e.printStackTrace();
+    void run() throws ExecutionException, InterruptedException {
+        try(var deadLetter = new KafkaDispatcher<>()) {
+            while (true) {
+                var poll = consumer.poll(Duration.ofMillis(100));
+                if (!poll.isEmpty()) {
+                    System.out.println("Encontrei " + poll.count() + " registros");
+                    for (var record : poll) {
+                        try {
+                            parse.consume(record);
+                        } catch (Exception e) {
+                            // so far, just logging the exception for this message
+                            e.printStackTrace();
+
+                            //Enviando mensagem para deadletter quando ocorrer error
+                            var message = record.value();
+                            deadLetter.send("ECOMMERCE_DEADLETTER",
+                                    message.getId().toString(),
+                                    message.getId().continueWith("DeadLetter"),
+                                    new GsonSerializer().serialize("", message)
+                            );
+                        }
                     }
                 }
+
             }
 
         }

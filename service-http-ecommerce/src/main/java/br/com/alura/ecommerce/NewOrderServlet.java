@@ -11,8 +11,8 @@ import java.util.concurrent.ExecutionException;
 
 public class NewOrderServlet extends HttpServlet {
 
-    private final KafkaDispatcher<Order> orderDispatcher = new KafkaDispatcher<>(GenerataAllReportsServlet.class.getSimpleName());
-    private final KafkaDispatcher<String> emailDispatcher = new KafkaDispatcher<>(GenerataAllReportsServlet.class.getSimpleName());
+    private final KafkaDispatcher<Order> orderDispatcher = new KafkaDispatcher<>();
+    private final KafkaDispatcher<String> emailDispatcher = new KafkaDispatcher<>();
 
     @Override
     public void destroy() {

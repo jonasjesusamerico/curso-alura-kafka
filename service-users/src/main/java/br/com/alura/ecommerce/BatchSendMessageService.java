@@ -38,10 +38,14 @@ public class BatchSendMessageService {
                 Map.of()
         )) {
             service.run();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
-    private final KafkaDispatcher<User> userDispatcher = new KafkaDispatcher<User>(BatchSendMessageService.class.getSimpleName());
+    private final KafkaDispatcher<User> userDispatcher = new KafkaDispatcher<User>();
 
     public void parse(ConsumerRecord<String, Message<String>> record) throws SQLException, ExecutionException, InterruptedException {
         System.out.println("---------------------------------------");
@@ -51,7 +55,8 @@ public class BatchSendMessageService {
 
 
         for (User user : getAllUsers()) {
-            userDispatcher.send(message.getPayLoad(), user.getUuid(), message.getId().continueWith(BatchSendMessageService.class.getSimpleName()), user);
+            userDispatcher.sendAsync(message.getPayLoad(), user.getUuid(), message.getId().continueWith(BatchSendMessageService.class.getSimpleName()), user);
+            System.out.println("Enviei para: " + user);
         }
 
     }

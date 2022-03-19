@@ -1,20 +1,18 @@
 package br.com.alura.ecommerce;
 
-import org.apache.kafka.clients.producer.Callback;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.io.Closeable;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 class KafkaDispatcher<T> implements Closeable {
 
     private final KafkaProducer<String, Message<T>> producer;
 
-    KafkaDispatcher(String name) {
+    KafkaDispatcher() {
         this.producer = new KafkaProducer<>(properties());
     }
 
@@ -33,6 +31,10 @@ class KafkaDispatcher<T> implements Closeable {
     }
 
     void send(String topic, String key, CorrelationId correlationId, T payload) throws ExecutionException, InterruptedException {
+        sendAsync(topic, key, correlationId, payload).get();
+    }
+
+    Future<RecordMetadata> sendAsync(String topic, String key, CorrelationId correlationId, T payload) {
         var value = new Message<>(correlationId, payload);
         var record = new ProducerRecord<>(topic, key, value);
 
@@ -45,7 +47,7 @@ class KafkaDispatcher<T> implements Closeable {
             System.out.println("Sucesso, enviando no topico:" + data.topic() + "/ partition: " + data.partition() + " / offset: " + data.offset() + " / timeStamp " + data.timestamp());
         };
 
-        producer.send(record, callback).get();
+        return producer.send(record, callback);
     }
 
     @Override

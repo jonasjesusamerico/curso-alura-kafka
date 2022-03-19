@@ -7,8 +7,8 @@ import java.util.concurrent.ExecutionException;
 public class NewOrderMain {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        try (var orderDispatcher = new KafkaDispatcher<Order>(NewOrderMain.class.getSimpleName())) {
-            try (var emailDispatcher = new KafkaDispatcher<String>(NewOrderMain.class.getSimpleName())) {
+        try (var orderDispatcher = new KafkaDispatcher<Order>()) {
+            try (var emailDispatcher = new KafkaDispatcher<String>()) {
 
                 var email = Math.random() + "@email.com";
                 for (int i = 0; i < 10; i++) {

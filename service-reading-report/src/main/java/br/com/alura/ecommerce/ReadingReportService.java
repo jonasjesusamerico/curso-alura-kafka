@@ -15,7 +15,7 @@ public class ReadingReportService {
 
     final static Path SOURCE = new File("target/report.txt").toPath();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
         var reportService = new ReadingReportService();
         try (var service = new KafkaService<>(
                 ReadingReportService.class.getSimpleName(),

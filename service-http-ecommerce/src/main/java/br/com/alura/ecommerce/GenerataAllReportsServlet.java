@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutionException;
 
 public class GenerataAllReportsServlet extends HttpServlet {
 
-    private final KafkaDispatcher<String> batchDispatcher = new KafkaDispatcher<>(GenerataAllReportsServlet.class.getSimpleName());
+    private final KafkaDispatcher<String> batchDispatcher = new KafkaDispatcher<>();
 
     @Override
     public void destroy() {
