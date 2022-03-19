@@ -38,7 +38,7 @@ public class KafkaService<T> implements Closeable {
     }
 
     public void run() throws ExecutionException, InterruptedException {
-        try(var deadLetter = new KafkaDispatcher<>()) {
+        try (var deadLetter = new KafkaDispatcher<>()) {
             while (true) {
                 var poll = consumer.poll(Duration.ofMillis(100));
                 if (!poll.isEmpty()) {
@@ -74,6 +74,7 @@ public class KafkaService<T> implements Closeable {
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         properties.setProperty(ConsumerConfig.CLIENT_ID_CONFIG, UUID.randomUUID().toString());
         properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "1"); // Consome no maximo uma mensagem kafka, e commit essa mensagem em 1 em 1
+        properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         properties.putAll(overrideProperties);
         return properties;
     }
