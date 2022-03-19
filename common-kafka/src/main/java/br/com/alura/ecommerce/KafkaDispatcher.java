@@ -14,7 +14,7 @@ class KafkaDispatcher<T> implements Closeable {
 
     private final KafkaProducer<String, Message<T>> producer;
 
-    KafkaDispatcher() {
+    KafkaDispatcher(String name) {
         this.producer = new KafkaProducer<>(properties());
     }
 
@@ -32,8 +32,8 @@ class KafkaDispatcher<T> implements Closeable {
         return properties;
     }
 
-    void send(String topic, String key, T payload) throws ExecutionException, InterruptedException {
-        var value = new Message<>(new CorrelationId(), payload);
+    void send(String topic, String key, CorrelationId correlationId, T payload) throws ExecutionException, InterruptedException {
+        var value = new Message<>(correlationId, payload);
         var record = new ProducerRecord<>(topic, key, value);
 
         // Producer permite passar uma função de callback para conseguir criar validações de notificação
