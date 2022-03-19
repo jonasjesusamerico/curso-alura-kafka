@@ -10,15 +10,15 @@ public class EmailService {
         var emailService = new EmailService();
         try (var service = new KafkaService(
                 EmailService.class.getSimpleName(),
-                "ECOMMERCE_SEND_EMAIL", emailService::parse,
-                String.class,
+                "ECOMMERCE_SEND_EMAIL",
+                emailService::parse,
                 Map.of()
         )) {
             service.run();
         }
     }
 
-    private void parse(ConsumerRecord<String, String> record) {
+    private void parse(ConsumerRecord<String, Message<String>> record) {
         System.out.println("---------------------------------------");
         System.out.println("Sending email, cheking for fraud");
         System.out.println(record.key());
