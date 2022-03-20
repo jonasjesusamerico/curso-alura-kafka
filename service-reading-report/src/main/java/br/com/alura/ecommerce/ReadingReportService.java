@@ -1,14 +1,12 @@
 package br.com.alura.ecommerce;
 
 import br.com.alura.ecommerce.consumer.ConsumerService;
-import br.com.alura.ecommerce.consumer.KafkaService;
 import br.com.alura.ecommerce.consumer.ServiceRunner;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class ReadingReportService implements ConsumerService<User> {
@@ -19,7 +17,7 @@ public class ReadingReportService implements ConsumerService<User> {
         new ServiceRunner(ReadingReportService::new).start(5);
     }
 
-    public void parse(ConsumerRecord<String, Message<User>> record) throws IOException{
+    public void parse(ConsumerRecord<String, Message<User>> record) throws IOException {
         System.out.println("---------------------------------------");
         System.out.println("Processing report for " + record.value());
 
